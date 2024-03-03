@@ -45,10 +45,13 @@ public class UsuarioController extends HttpServlet {
 	//PrintWriter saida =  response.getWriter();
 	//saida.println("nome: " + nome + "idade: " + idade);
 	
+		//captura parâmetro na tela
 		String acao = request.getParameter("acao");
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
 		
 		//Captura parâmetro da tela
+		
+		
 		
 		
 		if(acao!=null && acao.equals("exc")) {
@@ -56,15 +59,26 @@ public class UsuarioController extends HttpServlet {
 			//Captura parâmetro da tela
 			String id = request.getParameter("id");
 			
+		//UsuarioDAO usuarioDAO2 = new UsuarioDAO(); pode ser aqui ou ali em cima 
 			Usuario usuario = new Usuario();
 			usuario.setId(Integer.parseInt(id));
 			
 			usuarioDAO.Excluir(usuario);
+		} 
+		 if(acao!=null && acao.equals("alt")){
+			 //captura parametro da tela
+			 String id = request.getParameter("id");
+			 //busca objeto usuário no banco
+			 Usuario usuario = usuarioDAO.buscarPorId(Integer.parseInt(id));
+			 //seta atributo no request com objeto usuário
+			 request.setAttribute("usuario", usuario);
+			 //encaminha objeto usuário para tela
+			 RequestDispatcher saida = request.getRequestDispatcher("/frmusuario.jsp");
+			saida.forward(request, response);
 		}
 		
+		 if(acao!=null && acao.equals("lis")){
 		//PEDIR UMA LISTA
-		
-		
 		List<Usuario> lista = usuarioDAO.buscarTodos();
 		
 		//ENCANMINHANDO AO JSP
@@ -79,21 +93,9 @@ public class UsuarioController extends HttpServlet {
 		RequestDispatcher saida = request.getRequestDispatcher("listausuarios.jsp");
 		saida.forward(request, response);
 		
+		 }
 		
 		
-		/*String htmlsaida = "<html> <body> <table border='1'>" +
-		"<tr> <td> Id</td><td> Nome</td> <td> Login</td> <td> Senha</td> </tr>";
-		
-		for(Usuario usu : lista) {
-			htmlsaida += "<tr> <td>" + usu.getId()+  " </td> <td>" +usu.getNome()+  " </td> <td>" +usu.getLogin()+  "</td> <td>" +usu.getSenha()+ "</td> </tr>";
-		}
-		
-		htmlsaida += "</table> <body><html>";
-		
-		
-		
-		PrintWriter saida = response.getWriter();
-		saida.println(htmlsaida); */
 		
 	
 	

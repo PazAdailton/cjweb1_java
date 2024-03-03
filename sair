@@ -1,0 +1,114 @@
+[1mdiff --git a/WebContent/frmusuario.html b/WebContent/frmusuario.html[m
+[1mindex 1499818..36ee384 100644[m
+[1m--- a/WebContent/frmusuario.html[m
+[1m+++ b/WebContent/frmusuario.html[m
+[36m@@ -6,6 +6,8 @@[m
+ </head>[m
+ <body>[m
+ 	[m
+[32m+[m[41m	[m
+[32m+[m[41m	[m
+ 	<form action="usucontroller.do" method="post">[m
+ 	[m
+ 	<label>ID: </label>[m
+[1mdiff --git a/WebContent/listausuarios.jsp b/WebContent/listausuarios.jsp[m
+[1mindex 2bb603a..5e32a14 100644[m
+[1m--- a/WebContent/listausuarios.jsp[m
+[1m+++ b/WebContent/listausuarios.jsp[m
+[36m@@ -25,7 +25,7 @@[m [mout.println(nome);[m
+  	<th>Login</th> [m
+  	<th>Senha</th>[m
+  	<th>Acao</th>[m
+[31m- 	<th>Alterar</th>[m
+[32m+[m[41m [m	[32m<% //<th>Alterar</th> %>[m
+  [m
+  [m
+  </tr>[m
+[36m@@ -43,8 +43,12 @@[m [mout.println(nome);[m
+ 	<td><%out.print(usu.getNome()); %></td> [m
+ 	<td><%= usu.getLogin() %></td>[m
+ 	<td><%= usu.getSenha() %></td>[m
+[31m-	<td><a href="usucontroller.do?acao=exc&id=<%=usu.getId()%>">Excluir</a></td>[m
+[31m-	<td><a href="">Alterar</a></td>[m
+[32m+[m	[32m<td>[m
+[32m+[m[41m	[m
+[32m+[m	[32m<a href="usucontroller.do?acao=exc&id=<%=usu.getId()%>">Excluir</a>[m
+[32m+[m	[32m<a href="usucontroller.do?acao=alt&id=<%=usu.getId()%>">Alterar</a>[m
+[32m+[m[41m	[m
+[32m+[m	[32m</td>[m
+ 	[m
+ 	[m
+ 	[m
+[1mdiff --git a/build/classes/br/com/pazimpots/controller/UsuarioController.class b/build/classes/br/com/pazimpots/controller/UsuarioController.class[m
+[1mindex 950348a..e03b48b 100644[m
+Binary files a/build/classes/br/com/pazimpots/controller/UsuarioController.class and b/build/classes/br/com/pazimpots/controller/UsuarioController.class differ
+[1mdiff --git a/src/main/java/br/com/pazimpots/controller/UsuarioController.java b/src/main/java/br/com/pazimpots/controller/UsuarioController.java[m
+[1mindex 61f789c..2d214f5 100644[m
+[1m--- a/src/main/java/br/com/pazimpots/controller/UsuarioController.java[m
+[1m+++ b/src/main/java/br/com/pazimpots/controller/UsuarioController.java[m
+[36m@@ -45,26 +45,40 @@[m [mpublic class UsuarioController extends HttpServlet {[m
+ 	//PrintWriter saida =  response.getWriter();[m
+ 	//saida.println("nome: " + nome + "idade: " + idade);[m
+ 	[m
+[32m+[m		[32m//captura parâmetro na tela[m
+ 		String acao = request.getParameter("acao");[m
+ 		UsuarioDAO usuarioDAO = new UsuarioDAO();[m
+ 		[m
+ 		//Captura parâmetro da tela[m
+ 		[m
+ 		[m
+[32m+[m[41m		[m
+[32m+[m[41m		[m
+ 		if(acao!=null && acao.equals("exc")) {[m
+ 			[m
+ 			//Captura parâmetro da tela[m
+ 			String id = request.getParameter("id");[m
+ 			[m
+[32m+[m		[32m//UsuarioDAO usuarioDAO2 = new UsuarioDAO(); pode ser aqui ou ali em cima[m[41m [m
+ 			Usuario usuario = new Usuario();[m
+ 			usuario.setId(Integer.parseInt(id));[m
+ 			[m
+ 			usuarioDAO.Excluir(usuario);[m
+[32m+[m		[32m}[m[41m [m
+[32m+[m		[32m if(acao!=null && acao.equals("alt")){[m
+[32m+[m			[32m //captura parametro da tela[m
+[32m+[m			[32m String id = request.getParameter("id");[m
+[32m+[m			[32m //busca objeto usuário no banco[m
+[32m+[m			[32m Usuario usuario = usuarioDAO.buscarPorId(Integer.parseInt(id));[m
+[32m+[m			[32m //seta atributo no request com objeto usuário[m
+[32m+[m			[32m request.setAttribute("usuario", usuario);[m
+[32m+[m			[32m //encaminha objeto usuário para tela[m
+[32m+[m			[32m RequestDispatcher saida = request.getRequestDispatcher("/frmusuario.jsp");[m
+[32m+[m			[32msaida.forward(request, response);[m
+ 		}[m
+ 		[m
+[32m+[m		[32m if(acao!=null && acao.equals("lis")){[m
+ 		//PEDIR UMA LISTA[m
+[31m-		[m
+[31m-		[m
+ 		List<Usuario> lista = usuarioDAO.buscarTodos();[m
+ 		[m
+ 		//ENCANMINHANDO AO JSP[m
+[36m@@ -79,21 +93,9 @@[m [mpublic class UsuarioController extends HttpServlet {[m
+ 		RequestDispatcher saida = request.getRequestDispatcher("listausuarios.jsp");[m
+ 		saida.forward(request, response);[m
+ 		[m
+[32m+[m		[32m }[m
+ 		[m
+ 		[m
+[31m-		/*String htmlsaida = "<html> <body> <table border='1'>" +[m
+[31m-		"<tr> <td> Id</td><td> Nome</td> <td> Login</td> <td> Senha</td> </tr>";[m
+[31m-		[m
+[31m-		for(Usuario usu : lista) {[m
+[31m-			htmlsaida += "<tr> <td>" + usu.getId()+  " </td> <td>" +usu.getNome()+  " </td> <td>" +usu.getLogin()+  "</td> <td>" +usu.getSenha()+ "</td> </tr>";[m
+[31m-		}[m
+[31m-		[m
+[31m-		htmlsaida += "</table> <body><html>";[m
+[31m-		[m
+[31m-		[m
+[31m-		[m
+[31m-		PrintWriter saida = response.getWriter();[m
+[31m-		saida.println(htmlsaida); */[m
+ 		[m
+ 	[m
+ 	[m

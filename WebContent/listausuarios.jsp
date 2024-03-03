@@ -25,7 +25,7 @@ out.println(nome);
  	<th>Login</th> 
  	<th>Senha</th>
  	<th>Acao</th>
- 	<th>Alterar</th>
+ 	<% //<th>Alterar</th> %>
  
  
  </tr>
@@ -43,8 +43,12 @@ out.println(nome);
 	<td><%out.print(usu.getNome()); %></td> 
 	<td><%= usu.getLogin() %></td>
 	<td><%= usu.getSenha() %></td>
-	<td><a href="usucontroller.do?acao=exc&id=<%=usu.getId()%>">Excluir</a></td>
-	<td><a href="">Alterar</a></td>
+	<td>
+	
+	<a href="usucontroller.do?acao=exc&id=<%=usu.getId()%>">Excluir</a>
+	<a href="usucontroller.do?acao=alt&id=<%=usu.getId()%>">Alterar</a>
+	
+	</td>
 	
 	
 	
