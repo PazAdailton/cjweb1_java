@@ -64,8 +64,15 @@ public class UsuarioController extends HttpServlet {
 			usuario.setId(Integer.parseInt(id));
 			
 			usuarioDAO.Excluir(usuario);
-		} 
-		 if(acao!=null && acao.equals("alt")){
+			
+			//redirecionando pelo cliente (browser) após excluuir o usuário
+			response.sendRedirect("usucontroller.do?acao=lis");		
+			//alternativa
+			//acao="lis";
+			
+		}
+		
+		if(acao!=null && acao.equals("alt")){
 			 //captura parametro da tela
 			 String id = request.getParameter("id");
 			 //busca objeto usuário no banco
@@ -81,12 +88,11 @@ public class UsuarioController extends HttpServlet {
 		//PEDIR UMA LISTA
 		List<Usuario> lista = usuarioDAO.buscarTodos();
 		
+		
 		//ENCANMINHANDO AO JSP
 		//ENGAVETAR A LISTA NO REQUEST
 		request.setAttribute("lista", lista);
 		request.setAttribute("meunome","Adailton");
-		
-		
 		
 		//ENCANMINHAR AO JSP
 		
@@ -94,11 +100,23 @@ public class UsuarioController extends HttpServlet {
 		saida.forward(request, response);
 		
 		 }
-		
-		
-		
-	
-	
+		 
+		 if(acao!=null && acao.equals("cad")) {
+			 
+			 Usuario usuario = new Usuario();
+			 usuario.setId(0);
+			 usuario.setNome("");
+			 usuario.setLogin("");
+			 usuario.setSenha("");
+			 
+			 request.setAttribute("usuario", usuario);
+			 
+			RequestDispatcher saida = request.getRequestDispatcher("frmusuario.jsp");
+			saida.forward(request, response);
+			 
+			 
+			 
+		 }
 	
 	}
 
